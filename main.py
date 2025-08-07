@@ -76,9 +76,12 @@ def custom_openapi():
 
     app.openapi_schema = openapi_schema
     return app.openapi_schema
-    
+
 @app.get("/")
 def root():
     return {"message": "LLM Doc Query API is running"}
 
-
+# ✅ Only runs if script is executed directly (not imported by uvicorn)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
