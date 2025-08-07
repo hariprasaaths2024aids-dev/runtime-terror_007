@@ -76,3 +76,9 @@ def custom_openapi():
 
     app.openapi_schema = openapi_schema
     return app.openapi_schema
+    
+@app.get("/")
+def root():
+    return {"message": "LLM Doc Query API is running"}
+
+
