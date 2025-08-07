@@ -1,8 +1,8 @@
 fastapi==0.110.1
 uvicorn==0.29.0
 python-dotenv==1.0.1
-pydantic==2.7.1
-pydantic-core==2.16.3  # ✅ prebuilt binary, no Rust needed
+pydantic==2.6.4
+pydantic-core==2.16.2
 pydantic-settings==2.2.1
 requests==2.31.0
 sentence-transformers==2.6.1
@@ -14,4 +14,4 @@ langchain-community==0.0.29
 langchain-core==0.1.53
 langchain-groq==0.3.7
 langchain-huggingface==0.3.1
-faiss-cpu==1.7.4
+faiss-cpu==1.7.4.post2
