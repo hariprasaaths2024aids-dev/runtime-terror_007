@@ -17,7 +17,7 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     answers: List[str]  # ✅ Flat strings only
 
-@router.post("/api/v1/hackrx/run", response_model=QueryResponse)
+@router.post("/hackrx/run", response_model=QueryResponse)
 def run_query(payload: QueryRequest):
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
@@ -48,3 +48,4 @@ def run_query(payload: QueryRequest):
     finally:
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
+
