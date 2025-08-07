@@ -6,7 +6,7 @@ services:
     startCommand: uvicorn main:app --host 0.0.0.0 --port 8000  # ✅ update this
     envVars:
       - key: GROQ_API_KEY
-        value: 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
+        value: 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
       - key: model_name
         value: llama3-70b-8192
       - key: team_token
