@@ -1,13 +1,14 @@
 services:
   - type: web
-    name: llm-doc-query
+    name: llm-query-service
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 8000  # ✅ update this
+    startCommand: uvicorn main:app --host 0.0.0.0 --port=$PORT
     envVars:
-      - key: GROQ_API_KEY
+      - key: groq_api_key
         value: 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
-      - key: model_name
-        value: llama3-70b-8192
       - key: team_token
         value: 278493a495a076d04856f2c05f7ba16a0e1a2acac7106db1adbf9b84a1642687
+      - key: model_name
+        value: llama3-70b-819
