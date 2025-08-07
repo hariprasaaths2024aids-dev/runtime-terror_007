@@ -6,7 +6,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port=$PORT
     envVars:
-      - key: groq_api_key
+      - key: GROQ_API_KEY
         value: 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
       - key: team_token
         value: 278493a495a076d04856f2c05f7ba16a0e1a2acac7106db1adbf9b84a1642687
