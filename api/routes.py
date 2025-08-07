@@ -60,11 +60,4 @@ def run_query(payload: QueryRequest):
             os.remove(tmp_path)
 
 
-# === GET /debug ===
-@router.get("/debug")
-def debug():
-    return {
-        "env_team_token": os.getenv("team_token"),
-        "groq_key_exists": bool(os.getenv("GROQ_API_KEY")),
-        "status": "App is live ✅"
-    }
+
