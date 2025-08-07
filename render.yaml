@@ -11,4 +11,4 @@ services:
       - key: team_token
         value: 278493a495a076d04856f2c05f7ba16a0e1a2acac7106db1adbf9b84a1642687
       - key: model_name
-        value: llama3-70b-819
+        value: llama3-70b-8192
