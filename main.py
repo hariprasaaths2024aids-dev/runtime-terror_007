@@ -81,10 +81,15 @@ def custom_openapi():
 def root():
     return {"message": "LLM Doc Query API is running"}
 
+@app.get("/debug")
+def debug():
+    return {"status": "ok"}
+
 # ✅ Only runs if script is executed directly (not imported by uvicorn)
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port)
+
 
 
