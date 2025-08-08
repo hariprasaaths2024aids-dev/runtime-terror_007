@@ -88,5 +88,7 @@ def debug():
     return {
         "env_team_token_set": bool(os.getenv("team_token")),
         "groq_key_set": bool(os.getenv("GROQ_API_KEY")),
+        "team_token_value": os.getenv("team_token"),
+        "groq_key_prefix": os.getenv("GROQ_API_KEY")[:8] + "..." if os.getenv("GROQ_API_KEY") else None,
         "status": "ok"
     }
