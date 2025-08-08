@@ -27,6 +27,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def log_headers(request: Request, call_next):
+    print("HEADERS RECEIVED:", dict(request.headers))
+    return await call_next(request)
 # Setup HTTP Bearer Auth
 security = HTTPBearer()
 
@@ -90,6 +94,7 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port)
+
 
 
 
