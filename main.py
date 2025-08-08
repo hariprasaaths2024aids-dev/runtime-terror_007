@@ -6,6 +6,7 @@ from fastapi.openapi.utils import get_openapi
 from dotenv import load_dotenv
 import os
 
+# Import your router
 from api.routes import router
 
 # Load environment variables
@@ -19,7 +20,7 @@ app = FastAPI(
     redoc_url=None
 )
 
-# Optional CORS (good for frontend integration)
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,24 +28,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.middleware("http")
-async def log_headers(request: Request, call_next):
-    print("HEADERS RECEIVED:", dict(request.headers))
-    return await call_next(request)
-# Setup HTTP Bearer Auth
+# HTTP Bearer Auth
 security = HTTPBearer()
 
 async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    if credentials.credentials != AUTH_TOKEN:
+    if not AUTH_TOKEN or credentials.credentials != AUTH_TOKEN:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Missing or invalid Authorization header"
         )
 
-# Register API routes with auth dependency
+# Mount API routes with auth
 app.include_router(router, prefix="/api/v1", dependencies=[Depends(verify_token)])
 
-# Global error handler
+# Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -55,7 +52,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         }
     )
 
-# Swagger: Enable "Authorize" button for Bearer token
+# Swagger security
 @app.get("/openapi.json", include_in_schema=False)
 def custom_openapi():
     if app.openapi_schema:
@@ -85,16 +82,11 @@ def custom_openapi():
 def root():
     return {"message": "LLM Doc Query API is running"}
 
+# Debug endpoint
 @app.get("/debug")
 def debug():
-    return {"status": "ok"}
-
-# ✅ Only runs if script is executed directly (not imported by uvicorn)
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
-
-
-
-
+    return {
+        "env_team_token_set": bool(os.getenv("team_token")),
+        "groq_key_set": bool(os.getenv("GROQ_API_KEY")),
+        "status": "ok"
+    }
