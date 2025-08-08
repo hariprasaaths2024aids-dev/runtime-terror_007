@@ -10,34 +10,30 @@ from app.decision import evaluate_with_llm
 
 router = APIRouter()
 
-
-# === Schemas ===
 class QueryRequest(BaseModel):
     documents: str
     questions: List[str]
 
 class QueryResponse(BaseModel):
-    answers: List[str]
+    answers: List[str]  # Flat strings only
 
-
-# === POST /hackrx/run ===
 @router.post("/hackrx/run", response_model=QueryResponse)
 def run_query(payload: QueryRequest):
-    tmp_path = None  # ✅ Declare early for finally block
-
+    tmp_path = None
     try:
-        # Download remote PDF to temp file
+        # Download PDF
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             response = requests.get(payload.documents)
-            response.raise_for_status()  # ✅ Raise exception for bad links
+            if response.status_code != 200:
+                raise HTTPException(status_code=400, detail="Failed to download document")
             tmp.write(response.content)
             tmp_path = tmp.name
 
-        # Load and embed documents
+        # Load + embed
         docs = load_document(tmp_path)
         vectorstore = create_vectorstore(docs)
 
-        # Process questions
+        # Answer questions
         results = []
         for q in payload.questions:
             try:
@@ -49,15 +45,13 @@ def run_query(payload: QueryRequest):
 
         return {"answers": results}
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
-
     finally:
         if tmp_path and os.path.exists(tmp_path):
             os.remove(tmp_path)
-
-
-
